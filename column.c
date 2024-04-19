@@ -165,3 +165,20 @@ void convert_value(COLUMN* col, unsigned long long int i, char* str, int size)
             break;
     }
 }
+
+void print_col(COLUMN* col, unsigned long long int i)
+{
+    if (i >= col->size) {
+        printf("Error: Index out of bounds!\n");
+        return;
+    }
+
+    // Créez un tampon de chaîne suffisamment grand pour stocker la valeur convertie.
+    char str[256]; // Ajustez la taille selon vos besoins.
+
+    // Appelez `convert_value` pour convertir la valeur en chaîne de caractères.
+    convert_value(col, i, str, sizeof(str));
+
+    // Imprimez la chaîne convertie.
+    printf("%s\n", str);
+}
