@@ -33,4 +33,6 @@ void delete_column(COLUMN **col);
 
 void convert_value(COLUMN *col, unsigned long long int i, char *str, int size);
 
+void print_col(COLUMN* col);
+
 #endif //PROJETC_FONCTIONS_H
