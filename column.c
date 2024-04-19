@@ -1,51 +1,29 @@
-#include <stdio.h>
+#include "column.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdio.h>
 #define REALOC_SIZE 256
 
-enum enum_type
-{
-    NULLVAL = 1 , UINT, INT, CHAR, FLOAT, DOUBLE, STRING, STRUCTURE
-};
-typedef enum enum_type ENUM_TYPE;
-
-union column_type{
-    unsigned int uint_value;
-    signed int int_value;
-    char char_value;
-    float float_value;
-    double double_value;
-    char* string_value;
-    void* struct_value;
-};
-
-typedef union column_type COL_TYPE ;
-
-struct column {
-    char *title;
-    unsigned int size; //logical size
-    unsigned int max_size; //physical size
-    ENUM_TYPE column_type;
-    COL_TYPE **data; // array of pointers to stored data
-    unsigned long long int *index; // array of integers
-};
-typedef struct column COLUMN;
-
-COLUMN *create_column(ENUM_TYPE type, char *title)
-{
-    COLUMN *tab = (COLUMN*)malloc(sizeof(COLUMN));
-    tab->title = title;
-    tab->column_type = type;
-    tab->data = NULL;
-    tab->max_size = 0;
-    tab->index = NULL;
-    tab->size = 0;
+COLUMN *create_column(ENUM_TYPE type, char *title){
+    COLUMN *col = (COLUMN *)malloc(sizeof(COLUMN));
+    if(col == NULL){
+        return NULL;
+    }
+    col->title = title;
+    col->size = 0;
+    col->max_size = 0;
+    col->column_type = type;
+    col->data = NULL;
+    col->index = NULL;
+    return col;
 }
 
-int insert_value(COLUMN *col, void *value)
-{
-    // Ensure there is enough space in the array for a new value
+
+int  insert_value(COLUMN *col, void *value){
+    if(col == NULL){
+        return 0;
+    }
+
     if (col->size >= col->max_size) {
         col->max_size += REALOC_SIZE;
         col->data = realloc(col->data, col->max_size * sizeof(COL_TYPE*));
@@ -63,7 +41,7 @@ int insert_value(COLUMN *col, void *value)
             if (col->data[col->size] == NULL) {
                 return 0; // Memory allocation failed
             }
-            *((int*)col->data[col->size]) = *((int*)value);
+            *((int *) col->data[col->size]) = *((int *) value);
             break;
 
         case UINT:
@@ -75,11 +53,15 @@ int insert_value(COLUMN *col, void *value)
             break;
 
         case CHAR:
-            col->data[col->size] = malloc(sizeof(char));
-            if (col->data[col->size] == NULL) {
-                return 0; // Memory allocation failed
+            if (value == NULL) {
+                col->data[col->size] = NULL;}
+            else {
+                col->data[col->size] = malloc(sizeof(char));
+                if (col->data[col->size] == NULL) {
+                    return 0; // Memory allocation failed
+                }
+                *((char *) col->data[col->size]) = *((char *) value);
             }
-            *((char*)col->data[col->size]) = *((char*)value);
             break;
 
         case FLOAT:
@@ -99,15 +81,18 @@ int insert_value(COLUMN *col, void *value)
             break;
 
         case STRING:
-            col->data[col->size] = malloc(strlen((char*)value) + 1);
-            if (col->data[col->size] == NULL) {
-                return 0; // Memory allocation failed
+            if (value == NULL) {
+                col->data[col->size] = NULL;}
+            else{
+                col->data[col->size] = malloc(strlen((char*)value) + 1);
+                if (col->data[col->size] == NULL) {
+                    return 0; // Memory allocation failed
+                }
+                strcpy((char*)col->data[col->size], (char*)value);
             }
-            strcpy((char*)col->data[col->size], (char*)value);
             break;
 
         case STRUCTURE:
-            // Handling for STRUCTURE can be added here as needed
             break;
     }
 
@@ -116,69 +101,67 @@ int insert_value(COLUMN *col, void *value)
     return 1;
 }
 
-void delete_column(COLUMN **col)
-{
-    // Ne peux pas free une structure parce que certain élément ne sont pas des pointeurs
+
+void delete_column(COLUMN **col){
     free((*col)->title);
-    // Data (tableau de pointeurs)
-    for(unsigned int i = 0; i<(*col)->size;i++)
-    {
+    for(unsigned int i = 0; i < (*col)->size; i++) {
         free((*col)->data[i]);
     }
+    free((*col)->data);
     free((*col)->index);
-    free((*col));
+    free(*col);
     *col = NULL;
 }
 
-void convert_value(COLUMN* col, unsigned long long int i, char* str, int size)
-{
-    if (i >= col->size) {
-        printf("Error: Index out of bounds!");
-        return;
-    }
 
-    switch(col->column_type) {
+void convert_value(COLUMN *col, unsigned long long int i, char *str, int size){
+    if(i >= col->size){
+        printf("error : out of bound");
+    }
+    switch(col->column_type){
         case INT:
-            snprintf(str, size, "%d", *((int*)(col->data[i])));
+            snprintf(str, size, "%d", *((int *)col->data[i]));
             break;
         case UINT:
-            snprintf(str, size, "%u", *((unsigned int*)(col->data[i])));
+            snprintf(str, size, "%u", *((unsigned int *)col->data[i]));
             break;
         case CHAR:
-            snprintf(str, size, "%c", *((char*)(col->data[i])));
+            if(col->data[i] == NULL){
+                snprintf(str, size, "NULL");
+            }
+            else {
+                snprintf(str, size, "%c", *((char *) col->data[i]));
+            }
             break;
         case FLOAT:
-            snprintf(str, size, "%f", *((float*)(col->data[i])));
+            snprintf(str, size, "%f", *((float *)col->data[i]));
             break;
         case DOUBLE:
-            snprintf(str, size, "%lf", *((double*)(col->data[i])));
+            snprintf(str, size, "%lf", *((double *)col->data[i]));
             break;
         case STRING:
-            snprintf(str, size, "%s", (char*)(col->data[i]));
-            break;
-        case STRUCTURE:
-            // Unable to display structures
-            printf("Cannot display structures.");
+            if(col->data[i] == NULL){
+                snprintf(str, size, "NULL");
+            }
+            else{
+                strncpy(str, (char *)col->data[i], size-1);
+                str[size-1] = '\0';
+            }
             break;
         default:
-            printf("Unsupported data type.");
-            break;
+            printf("error display type");
     }
 }
 
-void print_col(COLUMN* col, unsigned long long int i)
-{
-    if (i >= col->size) {
-        printf("Error: Index out of bounds!\n");
+
+void print_col(COLUMN* col){
+    if(col == NULL){
+        printf("Error pointer null");
         return;
     }
-
-    // Créez un tampon de chaîne suffisamment grand pour stocker la valeur convertie.
-    char str[256]; // Ajustez la taille selon vos besoins.
-
-    // Appelez `convert_value` pour convertir la valeur en chaîne de caractères.
-    convert_value(col, i, str, sizeof(str));
-
-    // Imprimez la chaîne convertie.
-    printf("%s\n", str);
+    for(int i = 0; i < col->size; i++){
+        char str[256];
+        convert_value(col, i, str, sizeof(str));
+        printf("[%d] %s\n", i, str);
+    }
 }
