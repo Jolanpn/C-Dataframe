@@ -129,3 +129,39 @@ void delete_column(COLUMN **col)
     free((*col));
     *col = NULL;
 }
+
+void convert_value(COLUMN* col, unsigned long long int i, char* str, int size)
+{
+    if (i >= col->size) {
+        printf("Error: Index out of bounds!");
+        return;
+    }
+
+    switch(col->column_type) {
+        case INT:
+            snprintf(str, size, "%d", *((int*)(col->data[i])));
+            break;
+        case UINT:
+            snprintf(str, size, "%u", *((unsigned int*)(col->data[i])));
+            break;
+        case CHAR:
+            snprintf(str, size, "%c", *((char*)(col->data[i])));
+            break;
+        case FLOAT:
+            snprintf(str, size, "%f", *((float*)(col->data[i])));
+            break;
+        case DOUBLE:
+            snprintf(str, size, "%lf", *((double*)(col->data[i])));
+            break;
+        case STRING:
+            snprintf(str, size, "%s", (char*)(col->data[i]));
+            break;
+        case STRUCTURE:
+            // Unable to display structures
+            printf("Cannot display structures.");
+            break;
+        default:
+            printf("Unsupported data type.");
+            break;
+    }
+}
