@@ -118,7 +118,7 @@ int insert_value(COLUMN *col, void *value)
 
 void delete_column(COLUMN **col)
 {
-    // Ne peux pas free une structure parce que certain élément ne sont pas
+    // Ne peux pas free une structure parce que certain élément ne sont pas des pointeurs
     free((*col)->title);
     // Data (tableau de pointeurs)
     for(unsigned int i = 0; i<(*col)->size;i++)
