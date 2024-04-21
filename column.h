@@ -40,4 +40,8 @@ void convert_value(COLUMN *col, unsigned long long int i, char *str, int size);
 
 void print_col(COLUMN* col);
 
+void occurrence_value(COLUMN *col,void *value);
+
+void position_value(COLUMN *col,void *value);
+
 #endif //PROJETC_COLUMN_H
