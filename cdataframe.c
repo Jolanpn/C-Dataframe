@@ -55,3 +55,35 @@ void remplir_cdataframe_dur(CDATAFRAME data)
         col=col->succ;
     }
 }
+
+void affiche_tout_cdataframe(CDATAFRAME data)
+{
+    MAILLON *col = data;
+    int ligne = 0;
+    int ligne_max = data->col->size;
+    
+    while (col != NULL)
+    {
+        printf("%s\t", col->col->title);
+        col = col->succ;
+    }
+    printf("\n");
+
+    while (ligne < ligne_max) {
+        col = data;
+        while (col != NULL)
+        {
+            if (ligne < col->col->size) 
+            {
+                printf("%d\t", col->col->data[ligne]);
+
+            } 
+            else 
+            {
+                printf("\t");
+            }
+            col = col->succ;
+        }
+        ligne++;
+    }
+}
