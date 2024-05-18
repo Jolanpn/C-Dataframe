@@ -87,3 +87,17 @@ void affiche_tout_cdataframe(CDATAFRAME data)
         ligne++;
     }
 }
+
+void affiche_ligne_cdataframe(CDATAFRAME data, int deb, int fin)
+{
+    MAILLON *col = data;
+    
+    while (col != NULL)
+    {
+        for(int i=deb;i<=fin && col->col->size;i++)
+        {
+            position_value((col->col, i);
+        }
+        col=col->succ;
+    }
+}
