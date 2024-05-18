@@ -101,3 +101,22 @@ void affiche_ligne_cdataframe(CDATAFRAME data, int deb, int fin)
         col=col->succ;
     }
 }
+
+void affiche_colonne_cdataframe(CDATAFRAME data, int deb, int fin)
+{
+    MAILLON *col = data;
+    int compt = 0;
+    
+    while (col != NULL && compt != deb )
+    {
+        compt++;
+    }   
+    if (compt==deb) 
+    {
+        for (int i = deb; i <= fin && col != NULL; i++) 
+        {
+            print_col(col->col);
+            col = col->succ;
+        }
+    }
+}
