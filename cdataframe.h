@@ -14,3 +14,7 @@ typedef MAILLON* CDATAFRAME;
 CDATAFRAME creation_cdataframe_vide(MAILLON* premiere_colonne);
 void remplir_cdataframe_saisi(CDATAFRAME data);
 void remplir_cdataframe_dur(CDATAFRAME data);
+// Affichage cdataframe
+void affiche_tout_cdataframe(CDATAFRAME data);
+void affiche_ligne_cdataframe(CDATAFRAME data, int deb, int fin);
+void affiche_colonne_cdataframe(CDATAFRAME data, int deb, int fin);
