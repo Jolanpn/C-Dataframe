@@ -4,8 +4,8 @@
 // Structure maillon 
 struct mailllon
 {
-    COLUMN* col; // Pointeur structure column
-    struct mailllon * succ;
+    COLUMN *col; // Pointeur structure column
+    struct mailllon *succ;
 };
 typedef struct mailllon MAILLON; // Utilisation de typedef pour créer un alias pour la structure maillon
 typedef MAILLON* CDATAFRAME;
