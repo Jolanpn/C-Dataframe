@@ -55,5 +55,5 @@ lnode *get_last_node(list * lst);
 lnode *get_next_node(list * lst, lnode * lnode);
 /**
 * retourne le node precedent */
-void *get_previous_elem(list * lst, lnode * lnode); #endif
+void *get_previous_elem(list * lst, lnode * lnode);
 #endif //PROJETC_LIST_H

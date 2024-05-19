@@ -3,7 +3,7 @@
 #include <string.h>
 #include "list.h"
 
-lnode *lst_createlnode(void *dat){
+lnode *lst_create_lnode(void *dat){
     lnode *ptmp = (lnode*) malloc(sizeof(lnode));
     ptmp->data = dat;
     ptmp->next = NULL;
@@ -20,7 +20,7 @@ list *lst_create_list(){
 }
 
 
-void lst_delete_list(lsit *lst){
+void lst_delete_list(list *lst){
     lst_erase(lst);
     free(lst);
 }
