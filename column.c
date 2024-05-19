@@ -19,8 +19,8 @@ COLUMN *create_column(ENUM_TYPE type, char *title){
 }
 
 
-int insert_value(COLUMN *col, void *value){
-    if(col == NULL){
+int insert_value(COLUMN *col, void *value) {
+    if (col == NULL) {
         return 0;
     }
 
@@ -28,67 +28,65 @@ int insert_value(COLUMN *col, void *value){
         col->max_size += REALOC_SIZE;
         col->data = realloc(col->data, col->max_size * sizeof(COL_TYPE*));
         if (col->data == NULL) {
-            // Memory allocation failed
+            //en cas d'erreur du realloc
             return 0;
         }
     }
-    // Allocate memory for the new data entry
-    switch (col->column_type)
-    {
+
+    switch (col->column_type) {
         case INT:
             col->data[col->size] = malloc(sizeof(int));
             if (col->data[col->size] == NULL) {
-                return 0; // Memory allocation failed
+                return 0;
             }
-            *((int *)col->data[col->size]) = *((int *) value);
-            printf("Inserted value: %d\n", *((int *)col->data[col->size-1]));
+            *((int *)col->data[col->size]) = *((int *)value);
             break;
 
         case UINT:
             col->data[col->size] = malloc(sizeof(unsigned int));
             if (col->data[col->size] == NULL) {
-                return 0; // Memory allocation failed
+                return 0;
             }
-            *((unsigned int*)col->data[col->size]) = *((unsigned int*)value);
+            *((unsigned int *)col->data[col->size]) = *((unsigned int *)value);
             break;
 
         case CHAR:
             if (value == NULL) {
-                col->data[col->size] = NULL;}
-            else {
+                col->data[col->size] = NULL;
+            } else {
                 col->data[col->size] = malloc(sizeof(char));
                 if (col->data[col->size] == NULL) {
-                    return 0; // Memory allocation failed
+                    return 0;
                 }
-                *((char *) col->data[col->size]) = *((char *) value);
+                *((char *)col->data[col->size]) = *((char *)value);
             }
             break;
 
         case FLOAT:
             col->data[col->size] = malloc(sizeof(float));
             if (col->data[col->size] == NULL) {
-                return 0; // Memory allocation failed
+                return 0;
             }
-            *((float*)col->data[col->size]) = *((float*)value);
+            *((float *)col->data[col->size]) = *((float *)value);
             break;
 
         case DOUBLE:
             col->data[col->size] = malloc(sizeof(double));
             if (col->data[col->size] == NULL) {
-                return 0; // Memory allocation failed
+                return 0;
             }
-            *((double*)col->data[col->size]) = *((double*)value);
+            *((double *)col->data[col->size]) = *((double *)value);
             break;
 
         case STRING:
             if (value == NULL) {
-                col->data[col->size] = NULL;}
-            else{
-                col->data[col->size] = malloc(strlen((char*)value) + 1);
+                col->data[col->size] = NULL;
+            } else {
+                col->data[col->size] = malloc(strlen((char *)value) + 1);
                 if (col->data[col->size] == NULL) {
-                    return 0; // Memory allocation failed
+                    return 0;
                 }
-                strcpy((char*)col->data[col->size], (char*)value);
+                strcpy((char *)col->data[col->size], (char *)value);
             }
             break;
 
@@ -96,12 +94,9 @@ int insert_value(COLUMN *col, void *value){
             break;
     }
 
-
     col->size++;
     return 1;
 }
-
-
 
 
 void delete_column(COLUMN **col){
@@ -123,7 +118,6 @@ void convert_value(COLUMN *col, unsigned long long int i, char *str, int size){
     switch(col->column_type){
         case INT:
             snprintf(str, size, "%d", *((int *)(col->data[i])));
-            printf("%s\n", str);
             break;
         case UINT:
             snprintf(str, size, "%u", *((unsigned int *)col->data[i]));
@@ -163,14 +157,18 @@ void print_col(COLUMN* col){
         return;
     }
     for(int i = 0; i < col->size; i++){
-        char str[256];
+        if (col->data[i] == NULL) {
+            printf("[%d] NULL\n", i);
+        }
+        else{
+            char str[256];
         convert_value(col, i, str, sizeof(str));
-        printf("[%d] %s\n", i, str);
+        printf("[%d] %s\n", i, str);}
     }
 }
 
 
-void occurrence_value(COLUMN *col, void *value) {
+int occurrence_value(COLUMN *col, void *value) {
     if(value == NULL){
         printf("error NULL value");
     }
@@ -224,11 +222,11 @@ void occurrence_value(COLUMN *col, void *value) {
             }
             break;
     }
-    printf("Le nombre d'occurrence est : %d\n", nb);
+    return nb;
 }
 
 
-void position_value(COLUMN *col,void *value){
+int position_value(COLUMN *col,void *value){
     if(value == NULL){
         printf("error NULL value");
     }
@@ -285,7 +283,144 @@ void position_value(COLUMN *col,void *value){
     if(nb == -1){
         printf("la valeur n'est pas présente");
     }
-    printf("La position de la valeur est : %d", nb);
+    return nb;
 }
 
 
+int superior_value(COLUMN *col,void *value){
+    if(value == NULL){
+        printf("error NULL value");
+    }
+    int nb = -1;
+    switch (col->column_type) {
+        case INT:
+            for (int i = 0; i < col->size; i++) {
+                if (*((int *) col->data[i]) > *((int *) value)) {
+                    nb++;
+                }
+            }
+            break;
+        case UINT:
+            for (int i = 0; i < col->size; i++) {
+                if (*((unsigned int *) col->data[i]) > *((unsigned int *) value)) {
+                    nb++;
+                }
+            }
+            break;
+        case CHAR:
+            for (int i = 0; i < col->size; i++) {
+                if(col->data[i] == NULL){
+                    continue;
+                }
+                else{
+                    if(*((char *) col->data[i]) > *((char *) value)){
+                        nb++;
+                    }
+                }
+            }
+            break;
+        case FLOAT:
+            for (int i = 0; i < col->size; i++) {
+                if (*((float *) col->data[i]) > *((float *) value)) {
+                    nb++;
+                }
+            }
+            break;
+        case DOUBLE:
+            for (int i = 0; i < col->size; i++) {
+                if (*((double *) col->data[i]) > *((double *) value)) {
+                    nb++;
+                }
+            }
+            break;
+        case STRING:
+            for (int i = 0; i < col->size; i++) {
+                if (strcmp((char *) col->data[i], (char *) value) == 0) {
+                    nb++;
+                }
+            }
+            break;
+    }
+    if(nb == -1){
+        printf("la valeur n'est pas présente");
+    }
+    return nb;
+}
+
+
+int inferior_value(COLUMN *col,void *value){
+    if(value == NULL){
+        printf("error NULL value");
+    }
+    int nb = -1;
+    switch (col->column_type) {
+        case INT:
+            for (int i = 0; i < col->size; i++) {
+                if (*((int *) col->data[i]) > *((int *) value)) {
+                    nb++;
+                }
+            }
+            break;
+        case UINT:
+            for (int i = 0; i < col->size; i++) {
+                if (*((unsigned int *) col->data[i]) < *((unsigned int *) value)) {
+                    nb++;
+                }
+            }
+            break;
+        case CHAR:
+            for (int i = 0; i < col->size; i++) {
+                if(col->data[i] == NULL){
+                    continue;
+                }
+                else{
+                    if(*((char *) col->data[i]) < *((char *) value)){
+                        nb++;
+                    }
+                }
+            }
+            break;
+        case FLOAT:
+            for (int i = 0; i < col->size; i++) {
+                if (*((float *) col->data[i]) < *((float *) value)) {
+                    nb++;
+                }
+            }
+            break;
+        case DOUBLE:
+            for (int i = 0; i < col->size; i++) {
+                if (*((double *) col->data[i]) < *((double *) value)) {
+                    nb++;
+                }
+            }
+            break;
+        case STRING:
+            for (int i = 0; i < col->size; i++) {
+                if (strcmp((char *) col->data[i], (char *) value) == 0) {
+                    nb++;
+                }
+            }
+            break;
+    }
+    if(nb == -1){
+        printf("la valeur n'est pas présente");
+    }
+    return nb;
+}
+
+
+void print_col_line(COLUMN* col, int line){
+    if(col == NULL){
+        printf("Error pointer null");
+        return;
+    }
+    for(int i = 0; i < col->size; i++){
+        if (col->data[i] == NULL) {
+            printf("[%d] NULL\n", i);
+        }
+        else{
+            char str[256];
+            convert_value(col, line, str, sizeof(str));
+            printf("[%d] %s\n", line, str);}
+        }
+    }
