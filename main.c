@@ -56,6 +56,7 @@ int main() {
                 scanf("%d", &nb_col);
                 for(int i = 0; i < nb_col; i++){
                     printf("\nQuel type pour la colonne %d ? ", (i+1));
+                    printf("\nLes types pour la colonne : UINT, INT,  CHAR, FLOAT, DOUBLE, STRING\n");
                     scanf("%s", scanf_type);
                     types[i] = string_to_enum2(scanf_type);
                 }
@@ -65,6 +66,7 @@ int main() {
                 printf("\nNom de la colonne à ajouter : ");
                 scanf("%s", col_name);
                 printf("\nType de colonne à ajouter : ");
+                printf("\nLes types pour la colonne : UINT, INT,  CHAR, FLOAT, DOUBLE, STRING\n");
                 scanf("%s", scanf_type);
                 add_col_dataframe(df, string_to_enum2(scanf_type), col_name);
                 break;
