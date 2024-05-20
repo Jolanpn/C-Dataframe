@@ -1,4 +1,8 @@
 Dépôt github : https://github.com/Jolanpn/C-Dataframe.git
+Choix des tâches lors de la création de la dataframe :
+    colonne : Tout type de données
+    cdataframe : Liste doublement chainée
+    fonctionnalités : Basique
 
 Fonctions de column.h :
 
