@@ -64,7 +64,7 @@ CDATAFRAME *create_cdataframe(ENUM_TYPE *cdftype, int size) {
 
 
 
-CDATAFRAME *empty_cdataframe(){
+CDATAFRAME *empty_cdataframe() {
     CDATAFRAME *df = (CDATAFRAME *) malloc(sizeof(CDATAFRAME));
     df->head = NULL;
     df->tail = NULL;
@@ -99,6 +99,7 @@ void add_line_dataframe_col(CDATAFRAME *cdf, char *col_name, void *value){
         COLUMN *col = (COLUMN *)current->data;
         if(strcmp(col->title, col_name) == 0){
             insert_value(col, value);
+            return;
         }
         current = current->next;
     }

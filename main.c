@@ -17,7 +17,6 @@ ENUM_TYPE string_to_enum2(const char *str) {
 
 int main() {
     int start = 0;
-
     while (!start) {
         int command;
         printf("\nMenu:\n");
@@ -144,7 +143,7 @@ int main() {
                 start = 1;
                 break;
             default:
-                printf("Choix invalide. Veuillez réessayer.\n");
+                printf("Choix invalide\n");
                 break;
         }
     }
