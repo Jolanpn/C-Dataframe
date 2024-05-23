@@ -22,11 +22,11 @@ typedef union column_type COL_TYPE ;
 
 struct column {
     char *title;
-    unsigned int size; //logical size
-    unsigned int max_size; //physical size
+    unsigned int size;
+    unsigned int max_size;
     ENUM_TYPE column_type;
-    COL_TYPE **data; // array of pointers to stored data
-    unsigned long long int *index; // array of integers
+    COL_TYPE **data;
+    unsigned long long int *index;
 };
 typedef struct column COLUMN;
 
