@@ -269,20 +269,16 @@ void delete_line_dataframe(CDATAFRAME *cdf, int line) {
             return;
         }
 
-        // Free the memory for the element to be deleted
         if (col->data[line] != NULL) {
             free(col->data[line]);
         }
 
-        // Shift elements to fill the gap
         for (unsigned int i = line; i < col->size - 1; i++) {
             col->data[i] = col->data[i + 1];
         }
 
-        // Nullify the last element after shifting
         col->data[col->size - 1] = NULL;
 
-        // Decrease the size of the column
         col->size--;
 
         current = current->next;
